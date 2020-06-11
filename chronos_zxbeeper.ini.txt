@@ -1,0 +1,16 @@
+Author=Tim Follin
+Misc=(c) 1987 Mastertronic
+FirstSong=0
+FileVersion=1
+PlayerVersion=3
+NewSong
+Name=Chronos - Title (Beeper)
+Stack=0
+INIT=<Music_Init>
+INTERRUPT=27
+HiReg=0
+LoReg=0
+SongLength=9350
+FadeLength=0
+CodeName=chronos_zxbeeper.bin
+CodeAddress=<Music_Data>
