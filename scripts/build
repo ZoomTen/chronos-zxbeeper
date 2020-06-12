@@ -1,5 +1,5 @@
 #!/bin/bash
 
 ../pasmo_assembler/pasmo -v chronos_zxbeeper.asm chronos_zxbeeper.bin chronos_zxbeeper.sym &&
-python make_ini.py &&
+python scripts/make_ini.py &&
 wine ../aymaker/AYMakeR.exe chronos_zxbeeper.ini
