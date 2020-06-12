@@ -4,14 +4,14 @@
 @org
 @label=Music_Data
 @equ=FxCmd_FF=255 ; a predef?.
-@equ=FCmd01=1 ;4 args
+@equ=FCmd01=1 ;4 args ADSR
 @equ=FCmd02=2 ;0 args
 @equ=FCmd03=3 ;0 args
-@equ=FCmd04=4 ;0 args
-@equ=FCmd05=5 ;0 args
+@equ=FCmd04=4 ;0 args Play drum pattern 1?
+@equ=FCmd05=5 ;0 args Play drum pattern 2?
 @equ=FCmd08=8 ;1 args
-@equ=FCmd09=9 ;0 args
-@equ=FCmd0A=10 ;0 args
+@equ=FCmd09=9 ;0 args  2 chord mode?
+@equ=FCmd0A=10 ;0 args 3 chord mode?
 b60388 DEFB FxCmd_FF,  FCmd08,1
  60391 DEFB FxCmd_FF,  FCmd03
  60393 DEFB FxCmd_FF,  FCmd0A
@@ -32,10 +32,11 @@ b60388 DEFB FxCmd_FF,  FCmd08,1
  60440 DEFB FxCmd_FF,  FCmd09
  60442 DEFB Repeat,1 ;Repeat has 1 argument too, also repeat?
 *60444 DEFB FxCmd_FF,  FCmd01,0,0,2,1
- 60450 DEFB 101,170,32
+ 60450 DEFB 101,170,32   ; 1st chord note, 2nd chord note, length?
  60453 DEFB 101,170,18
  60456 DEFB FxCmd_FF,  FCmd01,1,1,0,1
- 60462 DEFB 151,180,14,1
+ 60462 DEFB 151,180,14
+ 60465 DEFB Return
  60466 DEFB FxCmd_FF,  FCmd08,2
  60469 DEFB FxCmd_FF,  FCmd05
  60471 DEFB Repeat, 15
@@ -50,7 +51,8 @@ b60388 DEFB FxCmd_FF,  FCmd08,1
  60503 DEFB 101,170,32
  60506 DEFB 143,107,18
  60509 DEFB FxCmd_FF,  FCmd01,1,1,0,1
- 60515 DEFB 151,95,14,1
+ 60515 DEFB 151,95,14
+ 60518 DEFB Return
  60519 DEFB FxCmd_FF,  FCmd08,2
  60522 DEFB FxCmd_FF,  FCmd04
  60524 DEFB FxCmd_FF,  FCmd0A
@@ -60,13 +62,14 @@ b60388 DEFB FxCmd_FF,  FCmd08,1
  60534 DEFB 101,127
  60536 DEFB 170,8,113,135,170,8,113,143
  60544 DEFB 190,6,127,151,190,6,113,143
- 60552 DEFB 190,4,1,FxCmd_FF,FCmd01,0,0,0
+ 60552 DEFB 190,4,Return,FxCmd_FF,FCmd01,0,0,0
  60560 DEFB 1,FxCmd_FF,FCmd08,64,FxCmd_FF,FCmd05,101,127
  60568 DEFB 170,12,FxCmd_FF,FCmd05,113,135,170,16
  60576 DEFB FxCmd_FF,FCmd05,113,143,190,24,FxCmd_FF,FCmd05
  60584 DEFB 127,151,190,64,FxCmd_FF,FCmd08,2,FxCmd_FF
  60592 DEFB FCmd04,101,127,170,32,63,127,254
- 60600 DEFB 4,0
+ 60600 DEFB 4
+ 60601 DEFB 0  ;if it hits this point, the song ends
 ; according to CommandProcessor seems to be only 3 commands
 @equ=Return=1 ; go back to loop?
 @equ=Repeat=2 ; repeat
