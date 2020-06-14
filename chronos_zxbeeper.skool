@@ -270,7 +270,7 @@ b60388 DEFB FxCmd_FF,  FCmd08,1
 
 ; music init
 @label=Music_Init
-c61376 DI            ;
+c61376 DI            ; Disable interrupts, since perfect timing is needed
  61377 LD HL,63263   ;
 *61380 LD BC,65533   ; irrelevant
  61383 LD A,(HL)     ;
@@ -285,9 +285,9 @@ c61376 DI            ;
  61394 LD A,(HL)     ;
  61395 AND A         ;
  61396 JP NZ,61380   ;
- 61399 LD IX,60388   ;
+ 61399 LD IX,60388   ; IX = chords
  61403 LD (63185),IX ;
- 61407 LD IY,60602   ;
+ 61407 LD IY,60602   ; IY = bass
  61411 XOR A         ;
 @ssub=LD (62393+1),A
  61412 LD (62394),A  ;
@@ -312,69 +312,72 @@ c61376 DI            ;
 @ssub=LD (61900+1),A
  61450 LD (61901),A  ;
  61453 EXX           ;
- 61454 LD DE,60710   ;
+ 61454 LD DE,60710   ; DE = melody
  61457 LD (63179),DE ;
  61461 LD A,1        ;
 @ssub=LD (62176+1),A
  61463 LD (62177),A  ;
  61466 EXX           ;
 @label=IX_CommandProcessor
-*61467 LD A,(IX+0)   ;
+*61467 LD A,(IX+0)   ; Read current byte for 3-tone portion
  61470 CP 2          ;
  61472 JP NZ,61496   ;
+; 02 xx = set repeat
  61475 INC IX        ;
- 61477 LD A,(IX+0)   ;
+ 61477 LD A,(IX+0)   ; Get repeat count
  61480 INC A         ;
 @ssub=LD (61501+1),A
- 61481 LD (61502),A  ;
- 61484 INC IX        ;
- 61486 LD (63185),IX ;
+ 61481 LD (61502),A  ; Set the repeat counter
+ 61484 INC IX        ; 
+ 61486 LD (63185),IX ; Store repeat point address
  61490 LD A,(IX+0)   ;
- 61493 JP 61522      ;
+ 61493 JP 61522      ; Read the next byte
 *61496 CP 1          ;
  61498 JP NZ,61522   ;
-*61501 LD A,2        ;
- 61503 DEC A         ;
- 61504 JP NZ,61512   ;
+; 01 = go back to repeat point
+*61501 LD A,2        ; This is modified by the subroutine above
+ 61503 DEC A         ; A is the repeat counter 
+ 61504 JP NZ,61512   ; If the counter hasn't ran out, go back to loop point
  61507 INC IX        ;
- 61509 JP 61467      ;
+ 61509 JP 61467      ; Read the next byte
 @ssub=LD (61501+1),A
-*61512 LD (61502),A  ;
- 61515 LD IX,(63185) ;
+*61512 LD (61502),A  ; Save repeat counter
+ 61515 LD IX,(63185) ; Load saved repeat point
  61519 LD A,(IX+0)   ;
 *61522 AND A         ;
- 61523 JP Z,62601    ;
+ 61523 JP Z,62601    ; If current byte = 0, stop the music entirely
  61526 CP 255        ;
- 61528 JP NZ,61686   ;
- 61531 INC IX        ;
- 61533 INC IX        ;
- 61535 LD A,(IX-1)   ;
+ 61528 JP NZ,61686   ; If current byte != 255, process some notes
+; FF xx aa bb .. = special command for setting effects and envelopes
+ 61531 INC IX        ; Begin processing effects
+ 61533 INC IX        ; IX now points to the first argument
+ 61535 LD A,(IX-1)   ; Check command byte
  61538 CP 1          ;
- 61540 JP Z,61648    ;
+ 61540 JP Z,61648    ; 1 set envelope
  61543 CP 2          ;
  61545 JP Z,61625    ;
  61548 CP 3          ;
  61550 JP Z,61637    ;
  61553 CP 4          ;
- 61555 JP Z,61607    ;
+ 61555 JP Z,61607    ; 4 play drum pattern?
  61558 CP 5          ;
- 61560 JP Z,61616    ;
+ 61560 JP Z,61616    ; 5 play drum pattern?
  61563 CP 8          ;
  61565 JP Z,61596    ;
  61568 CP 9          ;
- 61570 JP Z,61581    ;
+ 61570 JP Z,61581    ; 9 set 2 note chord mode?
  61573 CP 10         ;
- 61575 JP Z,61589    ;
+ 61575 JP Z,61589    ; 10 set 3 note chord mode?
  61578 JP 61467      ;
 @label=IX_FFCommand09
 *61581 LD A,1        ;
 @ssub=LD (62393+1),A
- 61583 LD (62394),A  ;
+ 61583 LD (62394),A  ; Use 2 channels
  61586 JP 61467      ;
 @label=IX_FFCommand0a
 *61589 XOR A         ;
 @ssub=LD (62393+1),A
- 61590 LD (62394),A  ;
+ 61590 LD (62394),A  ; Use 3 channels
  61593 JP 61467      ;
 @label=IX_FFCommand08
 *61596 LD A,(IX+0)   ;
@@ -409,22 +412,22 @@ c61376 DI            ;
  61642 LD (61968),A  ;
  61645 JP 61467      ;
 @label=IX_FFCommand01
-*61648 LD A,(IX+0)   ;
+*61648 LD A,(IX+0)   ; Attack?
  61651 LD (63171),A  ;
  61654 LD (63170),A  ;
- 61657 LD A,(IX+1)   ;
+ 61657 LD A,(IX+1)   ; Decay target?
  61660 LD (63172),A  ;
- 61663 LD A,(IX+2)   ;
+ 61663 LD A,(IX+2)   ; Decay rate?
  61666 LD (63173),A  ;
- 61669 LD A,(IX+3)   ;
+ 61669 LD A,(IX+3)   ; ???
 @ssub=LD (62800+1),A
  61672 LD (62801),A  ;
- 61675 INC IX        ;
+ 61675 INC IX        ; Move IX to next music data
  61677 INC IX        ;
  61679 INC IX        ;
  61681 INC IX        ;
- 61683 JP 61467      ;
-*61686 LD A,(63171)  ;
+ 61683 JP 61467      ; Read next byte
+*61686 LD A,(63171)  ; 
  61689 LD (63170),A  ;
  61692 LD A,(63172)  ;
 @ssub=LD (62501+1),A
@@ -432,16 +435,16 @@ c61376 DI            ;
  61698 LD A,(63173)  ;
 @ssub=LD (62747+1),A
  61701 LD (62748),A  ;
- 61704 LD D,(IX+2)   ;
- 61707 LD E,(IX+0)   ;
+ 61704 LD D,(IX+2)   ; E,H contains the notes
+ 61707 LD E,(IX+0)   ; D contains the length / note
  61710 LD H,(IX+1)   ;
  61713 INC IX        ;
  61715 INC IX        ;
 @ssub=LD A,(62393+1)
  61717 LD A,(62394)  ;
- 61720 DEC A         ;
- 61721 JP Z,61726    ;
- 61724 INC IX        ;
+ 61720 DEC A         ; A = 0 if using 2 channels
+ 61721 JP Z,61726    ; 
+ 61724 INC IX        ; 
 *61726 LD A,(63170)  ;
  61729 AND A         ;
  61730 JP Z,62682    ;
@@ -617,7 +620,7 @@ c61376 DI            ;
 *62010 LD (61968),A  ;
  62013 INC HL        ;
  62014 PUSH HL       ;
- 62015 LD A,(HL)     ;
+ 62015 LD A,(HL)     ; Drums processor?
  62016 CP 0          ;
  62018 CALL Z,62826  ;
  62021 CP 1          ;
@@ -948,6 +951,7 @@ c61376 DI            ;
  62594 IN A,(254)    ;
  62596 AND 1         ;
  62598 JP NZ,61467   ;
+@label=StopMusic
 *62601 LD IY,23610   ;
 @ssub=LD A,(62225+1)
  62605 LD A,(62226)  ;
@@ -1112,8 +1116,8 @@ c62826 LD BC,700     ;
  62830 LD A,B        ;
  62831 OR C          ;
  62832 JP NZ,62829   ;
- 62835 XOR A         ;
- 62836 OUT (254),A   ;
+ 62835 XOR A         ; Zero
+ 62836 OUT (254),A   ; Set beeper low
  62838 LD A,0        ;
 *62840 DEC A         ;
  62841 JP NZ,62840   ;
@@ -1132,8 +1136,8 @@ c62845 LD HL,0       ;
  62857 ADD A,16      ;
 *62859 DEC A         ;
  62860 JP NZ,62859   ;
- 62863 LD A,16       ;
- 62865 OUT (254),A   ;
+ 62863 LD A,16       ; High
+ 62865 OUT (254),A   ; Set beeper high
  62867 LD A,20       ;
 *62869 DEC A         ;
  62870 JP NZ,62869   ;
@@ -1152,12 +1156,12 @@ c62876 LD BC,65533   ;
  62890 LD C,5        ;
  62892 LD HL,10      ;
 *62895 XOR A         ;
- 62896 OUT (254),A   ;
+ 62896 OUT (254),A   ; Set beeper low
  62898 LD B,(HL)     ;
  62899 INC HL        ;
 *62900 DJNZ 62900    ;
  62902 LD A,16       ;
- 62904 OUT (254),A   ;
+ 62904 OUT (254),A   ; Set beeper high
  62906 LD B,(HL)     ;
  62907 INC HL        ;
 *62908 DJNZ 62908    ;
@@ -1178,11 +1182,11 @@ c62876 LD BC,65533   ;
 c62926 LD C,30       ;
  62928 LD HL,1000    ;
 *62931 XOR A         ;
- 62932 OUT (254),A   ;
+ 62932 OUT (254),A   ; Set beeper low
  62934 LD B,C        ;
 *62935 DJNZ 62935    ;
  62937 LD A,16       ;
- 62939 OUT (254),A   ;
+ 62939 OUT (254),A   ; Set beeper high
  62941 LD A,31       ;
  62943 SUB C         ;
  62944 LD B,A        ;
@@ -1202,12 +1206,12 @@ c62926 LD C,30       ;
 c62959 LD C,26       ;
  62961 LD HL,1000    ;
 *62964 XOR A         ;
- 62965 OUT (254),A   ;
+ 62965 OUT (254),A   ; Set beeper low
  62967 LD A,C        ;
  62968 LD B,A        ;
 *62969 DJNZ 62969    ;
  62971 LD A,16       ;
- 62973 OUT (254),A   ;
+ 62973 OUT (254),A   ; Set beeper high
  62975 LD A,27       ;
  62977 SUB C         ;
  62978 LD B,A        ;
@@ -1228,11 +1232,11 @@ c62959 LD C,26       ;
 c62994 LD HL,2000    ;
  62997 LD C,25       ;
 *62999 XOR A         ;
- 63000 OUT (254),A   ;
+ 63000 OUT (254),A   ; Beeper low
  63002 LD B,30       ;
 *63004 DJNZ 63004    ;
  63006 LD A,16       ;
- 63008 OUT (254),A   ;
+ 63008 OUT (254),A   ; Beeper high
  63010 LD A,(HL)     ;
  63011 INC HL        ;
  63012 AND 128       ;
@@ -1246,58 +1250,58 @@ c62994 LD HL,2000    ;
 ;
 ; Used by the routine at #R61376.
 c63022 LD B,0        ;
- 63024 CALL 63033    ;
+ 63024 CALL 63033    ; This routine is executed 4 times
  63027 CALL 63033    ;
  63030 CALL 63033    ;
-*63033 DEC C         ;
- 63034 JP NZ,63058   ;
+*63033 DEC C         ; counter for something?
+ 63034 JP NZ,63058   ; ?
  63037 XOR A         ;
- 63038 OUT (254),A   ;
+ 63038 OUT (254),A   ; Beeper low
 *63040 LD C,113      ;
 *63042 LD A,38       ;
 *63044 DEC A         ;
  63045 JP NZ,63044   ;
  63048 LD A,16       ;
- 63050 OUT (254),A   ;
+ 63050 OUT (254),A   ; Beeper high
 *63052 LD A,5        ;
 *63054 DEC A         ;
  63055 JP NZ,63054   ;
 *63058 DEC D         ;
- 63059 JP NZ,63083   ;
+ 63059 JP NZ,63083   ; First note?
  63062 XOR A         ;
- 63063 OUT (254),A   ;
+ 63063 OUT (254),A   ; Beeper low
 *63065 LD D,114      ;
 *63067 LD A,24       ;
 *63069 DEC A         ;
  63070 JP NZ,63069   ;
  63073 LD A,16       ;
- 63075 OUT (254),A   ;
+ 63075 OUT (254),A   ; Beeper high
 *63077 LD A,2        ;
 *63079 DEC A         ;
  63080 JP NZ,63079   ;
 *63083 DEC E         ;
- 63084 JP NZ,63108   ;
+ 63084 JP NZ,63108   ; Second note?
  63087 XOR A         ;
- 63088 OUT (254),A   ;
+ 63088 OUT (254),A   ; Beeper low
 *63090 LD E,101      ;
 *63092 LD A,14       ;
 *63094 DEC A         ;
  63095 JP NZ,63094   ;
  63098 LD A,16       ;
- 63100 OUT (254),A   ;
+ 63100 OUT (254),A   ; Beeper high
 *63102 LD A,5        ;
 *63104 DEC A         ;
  63105 JP NZ,63104   ;
 *63108 DEC H         ;
- 63109 JP NZ,63133   ;
+ 63109 JP NZ,63133   ; Third note?
  63112 XOR A         ;
- 63113 OUT (254),A   ;
+ 63113 OUT (254),A   ; Beeper low
 *63115 LD H,170      ;
 *63117 LD A,27       ;
 *63119 DEC A         ;
  63120 JP NZ,63119   ;
  63123 LD A,16       ;
- 63125 OUT (254),A   ;
+ 63125 OUT (254),A   ; Beeper high
 *63127 LD A,5        ;
 *63129 DEC A         ;
  63130 JP NZ,63129   ;
@@ -1309,13 +1313,13 @@ c63022 LD B,0        ;
 *63142 DEC L         ;
  63143 JP NZ,63139   ;
  63146 XOR A         ;
- 63147 OUT (254),A   ;
+ 63147 OUT (254),A   ; Beeper low
 *63149 LD L,151      ;
 *63151 LD A,29       ;
 *63153 DEC A         ;
  63154 JP NZ,63153   ;
  63157 LD A,16       ;
- 63159 OUT (254),A   ;
+ 63159 OUT (254),A   ; Beeper high
 *63161 LD A,8        ;
 *63163 DEC A         ;
  63164 JP NZ,63163   ;
@@ -1339,9 +1343,13 @@ b63170 DEFB 0
  63184 DEFB 0
 *63185 DEFW 60444
  63187 DEFB 0,255
-*63189 DEFB 8,0,8,2,4
- 63194 DEFB 3,2,0,4,3,2,0,2
+; drum pattern 1, called by FF 04
+@label=DrumPattern_1
+*63189 DEFB 8,0,8,2
+ 63193 DEFB 4,3,2,0,4,3,2,0,2
  63202 DEFB 3,2,0,255,255
+; drum pattern 2, called by FF 05
+@label=DrumPattern_2
 *63207 DEFB 8,0,8
  63210 DEFB 3,6,0,2,0,2,3,4
  63218 DEFB 0,2,4,8,0,4,3,4
@@ -1350,6 +1358,7 @@ b63170 DEFB 0
  63242 DEFB 0,2,3,6,0,8,0,4
  63250 DEFB 3,4,0,8,0,2,1,2
  63258 DEFB 3,4,3,255,255
+@label=L63263
 *63263 DEFB 7,55,11
  63266 DEFB 0,12,8,13,1,8,17,6
  63274 DEFB 5,8,16,0,0
