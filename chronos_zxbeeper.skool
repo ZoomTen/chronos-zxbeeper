@@ -272,16 +272,24 @@ b60388 DEFB FxCmd_FF,  FCmd08,1
 @label=Music_Init
 c61376 DI            ; Disable interrupts, since perfect timing is needed
  61377 LD HL,63263   ;
-*61380 LD BC,65533   ; irrelevant
+*61380 LD BC,65533   ; + Select AY registers
  61383 LD A,(HL)     ;
  61384 INC HL        ;
+@bfix-begin
  61385 NOP           ;
  61386 NOP           ;
- 61387 LD BC,49149   ; irrelevant
+@bfix+else
+       OUT (C),A     ; + Execute AY part
+@bfix+end
+ 61387 LD BC,49149   ; + Write to AY registers
  61390 LD A,(HL)     ;
  61391 INC HL        ;
+@bfix-begin
  61392 NOP           ;
  61393 NOP           ;
+@bfix+else
+       OUT (C),A     ; + Execute AY part
+@bfix+end
  61394 LD A,(HL)     ;
  61395 AND A         ;
  61396 JP NZ,61380   ;
