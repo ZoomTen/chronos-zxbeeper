@@ -1,50 +1,51 @@
 @start
-; music data
+; Chronos music code (C) 1987 Tim Follin / Mastertronic.
+; Disassembled by ZoomTen, June 2020
 *60388
 @org
 @label=Music_Data
 @equ=FxCmd_FF=255 ; a predef?.
-@equ=FCmd01=1 ;4 args ADSR
+@equ=FCmd01=1 ;4 args Set envelope
 @equ=FCmd02=2 ;0 args
 @equ=FCmd03=3 ;0 args
 @equ=FCmd04=4 ;0 args Play drum pattern 1?
 @equ=FCmd05=5 ;0 args Play drum pattern 2?
-@equ=FCmd08=8 ;1 args
-@equ=FCmd09=9 ;0 args  2 chord mode?
-@equ=FCmd0A=10 ;0 args 3 chord mode?
+@equ=FCmd08=8 ;1 args Set drum speed?
+@equ=FCmd09=9 ;0 args  2-note chord mode? Might also set echo mode too, beware
+@equ=FCmd0A=10 ;0 args 3-note chord mode? Echo mode is disabled here 
 b60388 DEFB FxCmd_FF,  FCmd08,1
  60391 DEFB FxCmd_FF,  FCmd03
  60393 DEFB FxCmd_FF,  FCmd0A
- 60395 DEFB FxCmd_FF,  FCmd01,1,2,3,1
+ 60395 DEFB FxCmd_FF,  FCmd01,1,2,3,1 ; Attack, Sustain, Decay, ?
  60401 DEFB FxCmd_FF,  FCmd01,0,0,3,1
 @label=Music_Chords
 *60407 DEFB FxCmd_FF,  FCmd05
- 60409 DEFB 113,135,170,6 ;E, H, D in that order. Check Music_Init_5
+ 60409 DEFB Cs4,As3,Fs3,6 ; 1st chord note, 2nd chord note, 3rd chord note, length
  60413 DEFB FxCmd_FF,  FCmd05
- 60415 DEFB 101,120,151,6
+ 60415 DEFB Ds4,C_4,Gs3,6
  60419 DEFB FxCmd_FF,  FCmd05
- 60421 DEFB 95,113,143,6
+ 60421 DEFB E_4,Cs4,A_3,6
  60425 DEFB FxCmd_FF,  FCmd05
- 60427 DEFB 85,101,127,6
+ 60427 DEFB Fs4,Ds4,B_3,6
  60431 DEFB FxCmd_FF,  FCmd08,128
  60434 DEFB FxCmd_FF,  FCmd04
- 60435 DEFB 113,151,181,64
+ 60435 DEFB Cs4,Gs3,F_3,64
  60440 DEFB FxCmd_FF,  FCmd09
  60442 DEFB Repeat,1 ;Repeat has 1 argument too, also repeat?
 *60444 DEFB FxCmd_FF,  FCmd01,0,0,2,1
- 60450 DEFB 101,170,32   ; 1st chord note, 2nd chord note, length?
- 60453 DEFB 101,170,18
+ 60450 DEFB Ds4,Fs3,32   ; 1st chord note, 2nd chord note, length
+ 60453 DEFB Ds4,Fs3,18
  60456 DEFB FxCmd_FF,  FCmd01,1,1,0,1
- 60462 DEFB 151,180,14
+ 60462 DEFB Gs3,F_3-1,14
  60465 DEFB Return
  60466 DEFB FxCmd_FF,  FCmd08,2
  60469 DEFB FxCmd_FF,  FCmd05
  60471 DEFB Repeat, 15
  60473 DEFB FxCmd_FF,  FCmd01,0,0,2,1
- 60479 DEFB 143,107,32
- 60482 DEFB 143,107,18
+ 60479 DEFB A_3,D_4,32
+ 60482 DEFB A_3,D_4,18
  60485 DEFB FxCmd_FF,  FCmd01,1,1,0,1
- 60491 DEFB 151,95,14
+ 60491 DEFB Gs3,E_4,14
  60494 DEFB Return
  60495 DEFB Repeat, 7
  60497 DEFB FxCmd_FF,  FCmd01,0,0,2,1
@@ -75,6 +76,7 @@ b60388 DEFB FxCmd_FF,  FCmd08,1
 @equ=Repeat=2 ; repeat
 @equ=FxCmd_03=3 ; a predef.
 @equ=E_3=190
+@equ=F_3=181
 @equ=Fs3=170
 @equ=Gs3=151
 @equ=A_3=143
@@ -85,17 +87,18 @@ b60388 DEFB FxCmd_FF,  FCmd08,1
 @equ=D_4=107
 @equ=Ds4=101
 @equ=E_4=95
+@equ=F_4=90
 @equ=Fs4=85
 @equ=Gs4=76
 @equ=A_4=71
 @equ=B_4=64
-@equ=Glide_On=1 ; enable glide
-@equ=Glide_Off=2 ; disable glide
+@equ=Glide_On=1 ; 0 args. enable glide
+@equ=Glide_Off=2 ; 0 args. disable glide
 @equ=DCmd03=3 ; 1 argument
 @equ=DCmd04=4 ; 3 arguments
-@equ=Echo_Volume=5 ; set echo volume?
-@equ=Echo_On=6 ; enable echo?
-@equ=Echo_Off=7 ; disable echo?
+@equ=Echo_Volume=5 ; 1 argument, set echo volume?
+@equ=Echo_On=6 ; 0 args. Echo only works in 2-note chord mode. This also detunes the melody
+@equ=Echo_Off=7 ; 0 args.
 ; chord part?
 @label=Music_Bass
 *60602 DEFB FxCmd_03,Glide_On
@@ -126,14 +129,14 @@ b60388 DEFB FxCmd_FF,  FCmd08,1
 @label=Music_Melody
 *60710 DEFB FxCmd_03, DCmd03,  1
  60713 DEFB FxCmd_03, Glide_Off
- 60715 DEFB FxCmd_03, DCmd04,  0,1,2                  ; set priority?
+ 60715 DEFB FxCmd_03, DCmd04,  0,1,2  ; set priority? Attack, sustain, decay?
  60720 DEFB FxCmd_03, Glide_Off
 ;melody begin
  60722 DEFB Cs4,4, As3,4, Fs3,4
  60728 DEFB Ds4,4, C_4,4, Gs3,4
  60734 DEFB E_4,4, Cs4,4, A_3,4
  60740 DEFB Fs4,4, Ds4,4, B_3,4
- 60746 DEFB Fs4+5,128
+ 60746 DEFB F_4,128
  60748 DEFB FxCmd_03, Echo_Volume,  3                   ; set echo volume to 3
  60751 DEFB FxCmd_03, Echo_On                       ; enable echo
  60753 DEFB B_3,24, As3,4, B_3,24
