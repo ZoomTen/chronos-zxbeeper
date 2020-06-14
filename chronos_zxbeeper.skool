@@ -95,7 +95,7 @@ b60388 DEFB FxCmd_FF,  FCmd08,1
 @equ=Glide_On=1 ; 0 args. enable glide
 @equ=Glide_Off=2 ; 0 args. disable glide
 @equ=DCmd03=3 ; 1 argument
-@equ=DCmd04=4 ; 3 arguments
+@equ=DCmd04=4 ; 3 arguments. Set envelope
 @equ=Echo_Volume=5 ; 1 argument, set echo volume?
 @equ=Echo_On=6 ; 0 args. Echo only works in 2-note chord mode. This also detunes the melody
 @equ=Echo_Off=7 ; 0 args.
@@ -657,10 +657,11 @@ c61376 DI            ; Disable interrupts, since perfect timing is needed
 @ssub=LD (62061+1),A
  62064 LD (62062),A  ;
  62067 JP NZ,62176   ;
+@label=IY_CommandProcessor
 *62070 LD A,(IY+0)   ;
  62073 CP 2          ;
  62075 JP NZ,62096   ;
- 62078 INC IY        ;
+ 62078 INC IY        ; 02 xx Set repeat
  62080 LD A,(IY+0)   ;
  62083 INC A         ;
 @ssub=LD (62101+1),A
@@ -670,7 +671,7 @@ c61376 DI            ; Disable interrupts, since perfect timing is needed
  62093 JP 62070      ;
 *62096 CP 1          ;
  62098 JP NZ,62122   ;
-*62101 LD A,3        ;
+*62101 LD A,3        ; 01 Go back to repeat point
  62103 DEC A         ;
  62104 JP Z,62117    ;
 @ssub=LD (62101+1),A
@@ -681,7 +682,7 @@ c61376 DI            ; Disable interrupts, since perfect timing is needed
  62119 JP 62070      ;
 *62122 CP 3          ;
  62124 JP NZ,62144   ;
- 62127 INC IY        ;
+ 62127 INC IY        ; 03 xx unknown
  62129 LD A,(IY+0)   ;
 @ssub=LD (61830+1),A
  62132 LD (61831),A  ;
@@ -691,7 +692,7 @@ c61376 DI            ; Disable interrupts, since perfect timing is needed
  62139 INC IY        ;
  62141 JP 62070      ;
 @ssub=LD (63149+1),A
-*62144 LD (63150),A  ;
+*62144 LD (63150),A  ; Process note
  62147 SRL A         ;
  62149 SRL A         ;
  62151 LD L,A        ;
