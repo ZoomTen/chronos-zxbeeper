@@ -4,7 +4,7 @@ FirstSong=0
 FileVersion=1
 PlayerVersion=3
 NewSong
-Name=Chronos - Title (Beeper)
+Name=Chronos - Title
 Stack=0
 INIT=<Music_Init>
 INTERRUPT=27
@@ -13,15 +13,4 @@ LoReg=0
 SongLength=9350
 FadeLength=0
 CodeName=chronos_zxbeeper.bin
-CodeAddress=<Music_Data>
-NewSong
-Name=Chronos - Title (AY & Beeper)
-Stack=0
-INIT=<Music_Init>
-INTERRUPT=27
-HiReg=0
-LoReg=0
-SongLength=9350
-FadeLength=0
-CodeName=chronos_zxbeeper_ay.bin
 CodeAddress=<Music_Data>

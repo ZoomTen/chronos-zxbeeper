@@ -2,19 +2,25 @@
 
 Tim Follin's beeper sound engine for the ZX Spectrum, ripped from Chronos (1987)
 
-This disassembly uses the [Skoolkit](https://skoolkit.ca/) format. The scripts folder contains shell scripts (`build`, `generate_asm`) that can be used as a guide to compile it.
-
 Work in progress.
 
 For educational purposes.
 
 ## Build dependencies
 
-* Python 3 + Skoolkit
+* Python 3
 
 * [Pasmo Assembler](http://pasmo.speccy.org/)
 
 * [AYMakeR](https://www.worldofspectrum.org/projectay/tech.htm)
+
+* GNU Make
+
+## Building
+
+Run `make`.
+
+To enable and disable AY noise drums, change the `ENABLE_AY` variable in `chronos_zxbeeper.asm`.
 
 ## Details on the music data
 

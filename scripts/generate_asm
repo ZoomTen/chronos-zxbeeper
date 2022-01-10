@@ -1,2 +1,0 @@
-python ../skoolkit/skool2asm.py -c -s chronos_zxbeeper.skool > chronos_zxbeeper.asm
-python ../skoolkit/skool2asm.py -c -f 3 chronos_zxbeeper.skool > chronos_zxbeeper_ay.asm
