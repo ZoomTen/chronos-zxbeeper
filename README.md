@@ -22,6 +22,12 @@ Run `make`.
 
 To enable and disable AY noise drums, change the `ENABLE_AY` variable in `chronos_zxbeeper.asm`.
 
+Pasmo and AYMakeR should be extracted into its own folders, `Pasmo` and `AYMakeR`, respectively
+
+Wine variable should be cleared out when on Windows.
+
+If using Wine, [refer to this HOWTO first](https://wiki.winehq.org/Preloader_Page_Zero_Problem).
+
 ## Details on the music data
 
 The music data here is made up of four components:

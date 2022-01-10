@@ -2,6 +2,7 @@
 	predefCommand1 equ $FF
 	predefCommand2 equ $03
 
+; to mute use parameters: 1, 0, 1, 1
 MACRO fx_01, ?attack, ?sustain, ?decay, ?release
 	defb predefCommand1
 	defb $01, ?attack, ?sustain, ?decay, ?release
@@ -57,9 +58,9 @@ MACRO predef_03, ?arg_1
 	defb $03, ?arg_1
 ENDM
 
-MACRO predef_04, ?arg_1, ?arg_2, ?arg_3 ; set envelope?
+MACRO predef_04, ?is_attack, ?attack, ?decay ; set envelope?
 	defb predefCommand2
-	defb $04, ?arg_1, ?arg_2, ?arg_3
+	defb $04, ?is_attack, ?attack, ?decay
 ENDM
 
 MACRO echo_volume, ?volume
@@ -94,12 +95,12 @@ MACRO note, ?note, ?length
 	defb ?length
 ENDM
 
-MACRO note2, ?note1, ?note2, ?length ; two notes pressed
+MACRO chord2, ?note1, ?note2, ?length ; two notes pressed
 	defb ?note1, ?note2
 	defb ?length
 ENDM
 
-MACRO note3, ?note1, ?note2, ?note3, ?length ; two notes pressed
+MACRO chord3, ?note1, ?note2, ?note3, ?length ; two notes pressed
 	defb ?note1, ?note2, ?note3
 	defb ?length
 ENDM

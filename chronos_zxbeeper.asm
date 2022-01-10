@@ -1,5 +1,5 @@
 ;------------------------------------------------------------------------------
-; Chronos music code (C) 1987 Tim Follin / Mastertronic
+; Chronos 1-bit music code (C) 1987 Tim Follin / Mastertronic
 ;
 ; Disassembled by ZoomTen, June 2020
 ; Revised: January 2022
@@ -10,28 +10,6 @@
 
 INCLUDE "include/notes.asm"
 INCLUDE "include/macros.asm"
-
-; Temporary variables start ----------------------------------------------------
-	Glide_On EQU 1 ; 0 args. enable glide
-	Glide_Off EQU 2 ; 0 args. disable glide
-	DCmd03 EQU 3 ; 1 argument
-	DCmd04 EQU 4 ; 3 arguments. Set envelope
-	Echo_Volume EQU 5 ; 1 argument, set echo volume?
-	Echo_On EQU 6 ; 0 args. Echo only works in 2-note chord mode. This also detunes the melody
-	Echo_Off EQU 7 ; 0 args.
-	FxCmd_FF EQU 255 ; a predef?.
-	FCmd01 EQU 1 ;4 args Set envelope
-	FCmd02 EQU 2 ;0 args
-	FCmd03 EQU 3 ;0 args
-	FCmd04 EQU 4 ;0 args Play drum pattern 1?
-	FCmd05 EQU 5 ;0 args Play drum pattern 2?
-	FCmd08 EQU 8 ;1 args Set drum speed?
-	FCmd09 EQU 9 ;0 args  2-note chord mode? Might also set echo mode too, beware
-	FCmd0A EQU 10 ;0 args 3-note chord mode? Echo mode is disabled here
-	Return EQU 1 ; go back to loop?
-	Repeat EQU 2 ; repeat
-	FxCmd_03 EQU 3 ; a predef.
-; Temporary variables end ------------------------------------------------------
 
 ; ------------------- music code start -----------------------------------------
 
@@ -47,68 +25,68 @@ Music_Chords:
 
 ; the drum pattern is repeated for the first few beats
 	drumB
-	note3 Cs4, As3, Fs3, 6
+	chord3 Cs4, As3, Fs3, 6
 	drumB
-	note3 Ds4, C_4, Gs3, 6
+	chord3 Ds4, C_4, Gs3, 6
 	drumB
-	note3 E_4, Cs4, A_3, 6
+	chord3 E_4, Cs4, A_3, 6
 	drumB
-	note3 Fs4, Ds4, B_3, 6
+	chord3 Fs4, Ds4, B_3, 6
 	drum_speed 128
 	drumA
-	note3 Cs4, Gs3, F_3, 64
+	chord3 Cs4, Gs3, F_3, 64
 
 ; begin first part
 	two_note_chord
 	repeat 2
 		fx_01 0, 0, 2, 1
-		note2 Ds4, Fs3, 32         ; 1st chord note, 2nd chord note, length
-		note2 Ds4, Fs3, 18
+		chord2 Ds4, Fs3, 32         ; 1st chord note, 2nd chord note, length
+		chord2 Ds4, Fs3, 18
 		fx_01 1, 1, 0, 1
-		note2 Gs3, F_3-1, 14
+		chord2 Gs3, F_3-1, 14
 	return
 	drum_speed 2
 	drumB
 	repeat 16
 		fx_01 0, 0, 2, 1
-		note2 A_3, D_4, 32
-		note2 A_3, D_4, 18
+		chord2 A_3, D_4, 32
+		chord2 A_3, D_4, 18
 		fx_01 1,1,0,1
-		note2 Gs3, E_4, 14
+		chord2 Gs3, E_4, 14
 	return
 	repeat 8
 		fx_01 0,0,2,1
-		note2 Ds4, Fs3, 32
-		note2 A_3, D_4, 18
+		chord2 Ds4, Fs3, 32
+		chord2 A_3, D_4, 18
 		fx_01 1,1,0,1
-		note2 Gs3, E_4, 14
+		chord2 Gs3, E_4, 14
 	return
 	drum_speed 2
 	drumA
 	three_note_chord
 	fx_01 0,0,1,1
 	repeat 24
-		note3 Ds4, B_3, Fs3, 8
-		note3 Cs4, As3, Fs3, 8
-		note3 Cs4, A_3, E_3, 6
-		note3 B_3, Gs3, E_3, 6
-		note3 Cs4, A_3, E_3, 4
+		chord3 Ds4, B_3, Fs3, 8
+		chord3 Cs4, As3, Fs3, 8
+		chord3 Cs4, A_3, E_3, 6
+		chord3 B_3, Gs3, E_3, 6
+		chord3 Cs4, A_3, E_3, 4
 	return
 ; last few bars
 	fx_01 0, 0, 0, 1
 	drum_speed 64
 	drumB
-	note3 Ds4, B_3, Fs3, 12
+	chord3 Ds4, B_3, Fs3, 12
 	drumB
-	note3 Cs4, As3, Fs3, 16
+	chord3 Cs4, As3, Fs3, 16
 	drumB
-	note3 Cs4, A_3, E_3, 24
+	chord3 Cs4, A_3, E_3, 24
 	drumB
-	note3 B_3, Gs3, E_3, 64
+	chord3 B_3, Gs3, E_3, 64
 	drum_speed 2
 	drumA
-	note3 Ds4, B_3, Fs3, 32
-	note3 B_4-1, B_3, 254, 4
+	chord3 Ds4, B_3, Fs3, 32
+	chord3 B_4-1, B_3, 254, 4
 	end_song
 
 ; according to CommandProcessor seems to be only 3 commands chord part?
@@ -177,170 +155,340 @@ Music_Melody:
 	predef_04 0,1,2 ; set priority? Attack, sustain, decay?
 	disable_glide
 ; melody begin
-  note Cs4,4
-  note As3,4
-  note Fs3,4
-  note Ds4,4
-  note C_4,4
-  note Gs3,4
-  note E_4,4
-  note Cs4,4
-  note A_3,4
-  note Fs4,4
-  note Ds4,4
-  note B_3,4
-  note F_4,128
-  DEFB FxCmd_03, Echo_Volume,  3 ; set echo volume to 3
-  DEFB FxCmd_03, Echo_On  ; enable echo
-  note B_3,24
-  note As3,4
-  note B_3,24
-  note Cs4, 4
-  note Ds4,8
-  note Cs4, 8
-  note B_3,8
-  note As3, 8
-  note Fs3,8
-  note Gs3,32
-  note B_3,24
-  note As3, 4
-  note B_3,20
-  note Cs4, 4
-  note D_4,6
-  note Ds4, 6
-  note Fs4,8
-  DEFB Repeat,3           ; repeat the following 3 times
-	  note D_4,2
-  note B_3,2
-  DEFB Return             ; previous section plays 4 times
-  DEFB FxCmd_03,Glide_On  ; enable glide
-  DEFB Fs4,40
-  DEFB FxCmd_03,Glide_Off ; disable glide
-  DEFB FxCmd_03,Echo_Off  ; disable echo
-  DEFB FxCmd_03,Echo_Volume,10 ; make echo more pronounced
-  DEFB Repeat,1           ; repeat the following once
-	  DEFB Fs4,  4, E_4, 4
-	  DEFB Fs4, 32, Gs4, 4
-	  DEFB A_4,  4, B_4, 4, Gs4, 4, E_4, 4
-	  DEFB Gs4,  4, Fs4, 4, A_4, 4, Fs4, 56
-  DEFB Return             ; previous section plays 2 times
-  DEFB Fs4, 4, E_4, 4, D_4, 4
-  DEFB Cs4, 4, D_4, 4, Cs4, 4, B_3,4
-  DEFB A_3, 4, B_3, 4, A_3, 4, Fs3,4
-  DEFB E_3, 4, Fs3,80, Fs3, 4, E_3,4
-  DEFB Fs3, 4, A_3, 4, B_3, 4, A_3,4
-  DEFB B_3, 4, Cs4, 4, D_4, 4, Cs4,4
-  DEFB D_4, 4, E_4, 4, Fs4,80
-  DEFB Repeat,1
-	  DEFB 254, 2, E_3, 2, Fs3, 2, B_3, 2
-	  DEFB E_4, 2, Fs4, 2, B_4, 2, Fs4, 2
-	  DEFB E_4, 2, B_3, 2, Fs3, 2, E_3, 2
+	note Cs4, 4
+	note As3, 4
+	note Fs3, 4
+	note Ds4, 4
+	note C_4, 4
+	note Gs3, 4
+	note E_4, 4
+	note Cs4, 4
+	note A_3, 4
+	note Fs4, 4
+	note Ds4, 4
+	note B_3, 4
+	note F_4, 128
+
+	echo_volume 3
+	enable_echo
+	note B_3, 24
+	note As3, 4
+	note B_3, 24
+	note Cs4, 4
+	note Ds4, 8
+	note Cs4, 8
+	note B_3, 8
+	note As3, 8
+	note Fs3, 8
+	note Gs3, 32
+	note B_3, 24
+	note As3, 4
+	note B_3, 20
+	note Cs4, 4
+	note D_4, 6
+	note Ds4, 6
+	note Fs4, 8
+	repeat 4
+		note D_4,2
+		note B_3,2
 	return
-  DEFB 254, 2, E_3, 2, Fs3,38
-  DEFB FxCmd_03,DCmd04,1,1,0
-  DEFB E_3,38
-  DEFB FxCmd_03,DCmd04,0,0,3
-  DEFB FxCmd_03,Glide_On
-  DEFB A_4,115
-  DEFB FxCmd_03,Glide_Off
-  DEFB Repeat,3
-	  DEFB Gs4, 4, E_4, 4, Cs4, 4
-	  DEFB E_4, 4, Fs4,48
+	enable_glide
+	DEFB Fs4,40
+
+	disable_glide
+	disable_echo
+	echo_volume 10 ; make echo more pronounced
+	repeat 2
+		note Fs4, 4
+		note E_4, 4
+		note Fs4, 32
+		note Gs4, 4
+		note A_4, 4
+		note B_4, 4
+		note Gs4, 4
+		note E_4, 4
+		note Gs4, 4
+		note Fs4, 4
+		note A_4, 4
+		note Fs4, 56
 	return
-  DEFB Gs4, 4
-  DEFB E_4, 4, Cs4, 4, Fs4,32
-  DEFB Repeat,3
-  DEFB Repeat,1
-	  DEFB Fs3, 2, B_3, 2, Cs4, 2
-	  DEFB B_4, 2, Cs4, 2, B_3, 2, Fs3, 2
-	  DEFB 226, 2
+
+	note Fs4, 4
+	note E_4, 4
+	note D_4, 4
+	note Cs4, 4
+	note D_4, 4
+	note Cs4, 4
+	note B_3, 4
+	note A_3, 4
+	note B_3, 4
+	note A_3, 4
+	note Fs3, 4
+	note E_3, 4
+	note Fs3, 80
+	note Fs3, 4
+	note E_3, 4
+	note Fs3, 4
+	note A_3, 4
+	note B_3, 4
+	note A_3, 4
+	note B_3, 4
+	note Cs4, 4
+	note D_4, 4
+	note Cs4, 4
+	note D_4, 4
+	note E_4, 4
+	note Fs4, 80
+	repeat 2
+		note 254, 2
+		note E_3, 2
+		note Fs3, 2
+		note B_3, 2
+		note E_4, 2
+		note Fs4, 2
+		note B_4, 2
+		note Fs4, 2
+		note E_4, 2
+		note B_3, 2
+		note Fs3, 2
+		note E_3, 2
 	return
-  DEFB Fs3,64
-  DEFB FxCmd_03,DCmd03,2
-  DEFB Fs4,16
-  DEFB FxCmd_03,Glide_On
-  DEFB E_4,16,Fs4,16
-  DEFB A_4,16,Fs4,16,E_4,16,D_4,16
-  DEFB Cs4,16,B_3,32,A_3,16,As3,16
-  DEFB B_3,32,A_3,16,180,16
-  DEFB FxCmd_03,Glide_Off
-  DEFB Fs4,16
-  DEFB FxCmd_03,Glide_On
-  DEFB E_4,16,Fs4,16
-  DEFB A_4,16,Fs4,16,E_4,16,D_4,16
-  DEFB Cs4,16
-  DEFB FxCmd_03,Echo_Volume,0
-  DEFB FxCmd_03,Glide_Off
-  DEFB Repeat, 3
-	  DEFB D_4,4,B_3,4,Fs3,4,Cs4,4
-	  DEFB A_3,4,Fs3,4,D_4,4,B_3,4
-	  DEFB Fs3,4,Cs4,4,A_3,4,Fs3,4
-	  DEFB D_4,4,B_3,4,Cs4,4,A_3,4
+	note 254, 2
+	note E_3, 2
+	note Fs3,38
+	predef_04 1,1,0
+	note E_3, 38
+	predef_04 0,0,3
+	enable_glide
+	note A_4, 115
+	disable_glide
+	repeat 4
+		note Gs4, 4
+		note E_4, 4
+		note Cs4, 4
+		note E_4, 4
+		note Fs4,48
 	return
-  DEFB FxCmd_03,Echo_Volume,9
-  DEFB Repeat,3
-	  DEFB D_4,4,B_3,4,Fs3,4,Cs4,4
-	  DEFB A_3,4,Fs3,4,D_4,4,B_3,4
-	  DEFB Fs3,4,Cs4,4,A_3,4,Fs3,4
-	  DEFB D_4,4,B_3,4,Cs4,4,A_3,4
+	note Gs4, 4
+	note E_4, 4
+	note Cs4, 4
+	note Fs4,32
+	repeat 4	; ?
+	repeat 2
+		note Fs3, 2
+		note B_3, 2
+		note Cs4, 2
+		note B_4, 2
+		note Cs4, 2
+		note B_3, 2
+		note Fs3, 2
+		note 226, 2
 	return
-  DEFB Repeat,3
-	  DEFB Ds4,4,B_3,4,Fs3,4
-	  DEFB Cs4,4,As3,4,Fs3,4,Ds4,4
-	  DEFB B_3,4,Fs3,4,Cs4,4,As3,4
-	  DEFB Fs3,4,Ds4,4,B_3,4,Cs4,4
-	  DEFB As3,4,D_4,4,B_3,4,Fs3,4
-	  DEFB Cs4,4,A_3,4,Fs3,4,D_4,4
-	  DEFB B_3,4,Fs3,4,Cs4,4,A_3,4
-	  DEFB Fs3,4,D_4,4,B_3,4,Cs4,4
-	  DEFB A_3,4
+	note Fs3, 64
+	predef_03 2
+	note Fs4, 16
+	enable_glide
+	note E_4, 16
+	note Fs4, 16
+	note A_4, 16
+	note Fs4, 16
+	note E_4, 16
+	note D_4, 16
+	note Cs4, 16
+	note B_3, 32
+	note A_3, 16
+	note As3, 16
+	note B_3, 32
+	note A_3, 16
+	note F_3-1, 16
+	disable_glide
+	note Fs4, 16
+	enable_glide
+	note E_4, 16
+	note Fs4, 16
+	note A_4, 16
+	note Fs4, 16
+	note E_4, 16
+	note D_4, 16
+	note Cs4, 16
+	echo_volume 0
+	disable_glide
+	repeat 4
+		note D_4,4
+		note B_3,4
+		note Fs3,4
+		note Cs4,4
+		note A_3,4
+		note Fs3,4
+		note D_4,4
+		note B_3,4
+		note Fs3,4
+		note Cs4,4
+		note A_3,4
+		note Fs3,4
+		note D_4,4
+		note B_3,4
+		note Cs4,4
+		note A_3,4
 	return
-  DEFB FxCmd_03,DCmd04,0,0,1
-  DEFB Repeat,3
-	  DEFB Ds4,60,E_4,4
-	  DEFB D_4,32,Fs4,4
-	  DEFB E_4,24,Fs4,4
+	echo_volume 9
+	repeat 4	; same as previous section
+		note D_4, 4
+		note B_3, 4
+		note Fs3, 4
+		note Cs4, 4
+		note A_3, 4
+		note Fs3, 4
+		note D_4, 4
+		note B_3, 4
+		note Fs3, 4
+		note Cs4, 4
+		note A_3, 4
+		note Fs3, 4
+		note D_4, 4
+		note B_3, 4
+		note Cs4, 4
+		note A_3, 4
 	return
-  DEFB FxCmd_03,Glide_Off
-  DEFB FxCmd_03,DCmd04,1,8,0
-  DEFB B_4,0
-  DEFB FxCmd_03,DCmd04,0,0,2
-  DEFB Repeat,1
-	  DEFB B_4,8
-	  DEFB 56,8,67,4,Gs4,4,Fs4,8
-	  DEFB A_4,8,B_4,8,Gs4,4,Fs4,4
-	  DEFB E_4,8,Fs4,B_4
+	repeat 4
+		note Ds4, 4
+		note B_3, 4
+		note Fs3, 4
+		note Cs4, 4
+		note As3, 4
+		note Fs3, 4
+		note Ds4, 4
+		note B_3, 4
+		note Fs3, 4
+		note Cs4, 4
+		note As3, 4
+		note Fs3, 4
+		note Ds4, 4
+		note B_3, 4
+		note Cs4, 4
+		note As3, 4
+		note D_4, 4
+		note B_3, 4
+		note Fs3, 4
+		note Cs4, 4
+		note A_3, 4
+		note Fs3, 4
+		note D_4, 4
+		note B_3, 4
+		note Fs3, 4
+		note Cs4, 4
+		note A_3, 4
+		note Fs3, 4
+		note D_4, 4
+		note B_3, 4
+		note Cs4, 4
+		note A_3, 4
 	return
-  DEFB Repeat,3
-	  DEFB B_4,16
-	  DEFB 67,16,A_4,12,Gs4,12,A_4
-	  DEFB 8
-  defb Return
-  defb Repeat,1
-	defb B_4,8,56,8
-	DEFB 67,4,Gs4,4,Fs4,4,Gs4,4
-	DEFB A_4,4,Gs4,4,Fs4,4,E_4,4
-	DEFB Gs4,4,Fs4,4,E_4,4,Fs4,4
-	DEFB Ds4,B_4,FxCmd_03,DCmd03,9,FxCmd_03,Glide_On
-  defb Return
-  DEFB Repeat,1
-	  defb Ds4,4,Cs4,4,Ds4,4
-	  DEFB E_4,4,Fs4,4,Gs4,4,A_4,4
-	  DEFB Gs4,4,A_4,4,Gs4,4,Fs4,4
-	  DEFB E_4,4,Gs4,4,Fs4,4,E_4,4
-	  DEFB Fs4,4,Ds4,B_4
-  defb Return
-  defb FxCmd_03,Glide_Off
-  defb Repeat, 3
-	  defb Ds4,4,B_3,4,Fs3,4,B_3
-	  DEFB 4,Cs4,4,As3,4,Fs3,4,As3
-	  DEFB 4,Cs4,4,A_3,4,E_3,4,B_3
-	  DEFB 4,Gs3,4,E_3,4,Cs4,4,A_3
-	  DEFB 4
-  defb Return
-  defb B_3,24,FxCmd_03,Glide_On,As3,32
-  DEFB A_3,48,Gs3,128,254,64,FxCmd_03,Glide_Off
-  DEFB B_3
+
+; Deadmau5 - Edit Your Friends :p
+	predef_04 0, 0, 1
+	repeat 4
+		note Ds4, 60
+		note E_4, 4
+		note D_4, 32
+		note Fs4, 4
+		note E_4, 24
+		note Fs4, 4
+	return
+
+	disable_glide
+	predef_04 1, 8, 0
+	note B_4, 0	; length 256
+
+	predef_04 0,0,2
+	repeat 2
+		note B_4, 8
+		note 56, 8
+		note B_4+3, 4
+		note Gs4, 4
+		note Fs4, 8
+		note A_4, 8
+		note B_4, 8
+		note Gs4, 4
+		note Fs4, 4
+		note E_4, 8
+		note Fs4, 64
+	return
+	repeat 4
+		note B_4, 16
+		note 67, 16
+		note A_4, 12
+		note Gs4, 12
+		note A_4, 8
+	return
+	repeat 2
+		note B_4, 8
+		note 56, 8
+		note B_4+3, 4
+		note Gs4, 4
+		note Fs4, 4
+		note Gs4, 4
+		note A_4, 4
+		note Gs4, 4
+		note Fs4, 4
+		note E_4, 4
+		note Gs4, 4
+		note Fs4, 4
+		note E_4, 4
+		note Fs4, 4
+		note Ds4, 64
+		predef_03 9
+		enable_glide
+	return
+	repeat 2
+		note Ds4, 4
+		note Cs4, 4
+		note Ds4, 4
+		note E_4, 4
+		note Fs4, 4
+		note Gs4, 4
+		note A_4, 4
+		note Gs4, 4
+		note A_4, 4
+		note Gs4, 4
+		note Fs4, 4
+		note E_4, 4
+		note Gs4, 4
+		note Fs4, 4
+		note E_4, 4
+		note Fs4, 4
+		note Ds4, 64
+	return
+	disable_glide
+	repeat 4
+		note Ds4, 4
+		note B_3, 4
+		note Fs3, 4
+		note B_3, 4
+		note Cs4, 4
+		note As3, 4
+		note Fs3, 4
+		note As3, 4
+		note Cs4, 4
+		note A_3, 4
+		note E_3, 4
+		note B_3, 4
+		note Gs3, 4
+		note E_3, 4
+		note Cs4, 4
+		note A_3, 4
+	return
+
+; final few bars
+	note B_3, 24
+	enable_glide
+	note As3, 32
+	note A_3, 48
+	note Gs3, 128
+
+	note 254, 64
+	disable_glide
+	defb B_3	; length doesn't matter at this point, song is cut off
 
 ; music init
 Music_Init:
