@@ -8,7 +8,7 @@ all: music
 music: chronos_zxbeeper.ay
 
 clean:
-	rm *.ay *.ini *.bin
+	rm -f *.ay *.ini *.bin *.sym
 
 %.ay: %.ini
 	$(WINE) $(AYMAKER) $<
