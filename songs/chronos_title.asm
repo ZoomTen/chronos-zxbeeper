@@ -4,8 +4,8 @@ Music_Chords:
 	drum_speed 1
 	fx_03
 	three_note_chord
-	fx_01 1, 2, 3, 1
-	fx_01 0, 0, 3, 1
+	chord_envelope 1, 2, 3, 1
+	chord_envelope 0, 0, 3, 1
 
 ; the drum pattern is repeated for the first few beats
 	drumB
@@ -23,32 +23,32 @@ Music_Chords:
 ; begin first part
 	two_note_chord
 	repeat 2
-		fx_01 0, 0, 2, 1
+		chord_envelope 0, 0, 2, 1
 		chord2 Ds4, Fs3, 32         ; 1st chord note, 2nd chord note, length
 		chord2 Ds4, Fs3, 18
-		fx_01 1, 1, 0, 1
+		chord_envelope 1, 1, 0, 1
 		chord2 Gs3, F_3-1, 14
 	return
 	drum_speed 2
 	drumB
 	repeat 16
-		fx_01 0, 0, 2, 1
+		chord_envelope 0, 0, 2, 1
 		chord2 A_3, D_4, 32
 		chord2 A_3, D_4, 18
-		fx_01 1,1,0,1
+		chord_envelope 1,1,0,1
 		chord2 Gs3, E_4, 14
 	return
 	repeat 8
-		fx_01 0,0,2,1
+		chord_envelope 0,0,2,1
 		chord2 Ds4, Fs3, 32
 		chord2 A_3, D_4, 18
-		fx_01 1,1,0,1
+		chord_envelope 1,1,0,1
 		chord2 Gs3, E_4, 14
 	return
 	drum_speed 2
 	drumA
 	three_note_chord
-	fx_01 0,0,1,1
+	chord_envelope 0,0,1,1
 	repeat 24
 		chord3 Ds4, B_3, Fs3, 8
 		chord3 Cs4, As3, Fs3, 8
@@ -57,7 +57,7 @@ Music_Chords:
 		chord3 Cs4, A_3, E_3, 4
 	return
 ; last few bars
-	fx_01 0, 0, 0, 1
+	chord_envelope 0, 0, 0, 1
 	drum_speed 64
 	drumB
 	chord3 Ds4, B_3, Fs3, 12
@@ -132,9 +132,9 @@ Music_Bass:
 	end_song
 
 Music_Melody:
-	predef_03 1
+	glide_speed 1
 	disable_glide
-	predef_04 0,1,2 ; set priority? Attack, sustain, decay?
+	melody_envelope 0,1,2 ; set priority? Attack, sustain, decay?
 	disable_glide
 ; melody begin
 	note Cs4, 4
@@ -239,9 +239,9 @@ Music_Melody:
 	note 254, 2
 	note E_3, 2
 	note Fs3,38
-	predef_04 1,1,0
+	melody_envelope 1,1,0
 	note E_3, 38
-	predef_04 0,0,3
+	melody_envelope 0,0,3
 	enable_glide
 	note A_4, 115
 	disable_glide
@@ -268,7 +268,7 @@ Music_Melody:
 		note 226, 2
 	return
 	note Fs3, 64
-	predef_03 2
+	glide_speed 2
 	note Fs4, 16
 	enable_glide
 	note E_4, 16
@@ -369,7 +369,7 @@ Music_Melody:
 	return
 
 ; Deadmau5 - Edit Your Friends :p
-	predef_04 0, 0, 1
+	melody_envelope 0, 0, 1
 	repeat 4
 		note Ds4, 60
 		note E_4, 4
@@ -380,10 +380,10 @@ Music_Melody:
 	return
 
 	disable_glide
-	predef_04 1, 8, 0
+	melody_envelope 1, 8, 0
 	note B_4, 0	; length 256
 
-	predef_04 0,0,2
+	melody_envelope 0,0,2
 	repeat 2
 		note B_4, 8
 		note 56, 8
@@ -420,7 +420,7 @@ Music_Melody:
 		note E_4, 4
 		note Fs4, 4
 		note Ds4, 64
-		predef_03 9
+		glide_speed 9
 		enable_glide
 	return
 	repeat 2

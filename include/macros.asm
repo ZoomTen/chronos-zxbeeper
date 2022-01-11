@@ -3,7 +3,7 @@
 	predefCommand2 equ $03
 
 ; to mute use parameters: 1, 0, 1, 1
-MACRO fx_01, ?attack, ?sustain, ?decay, ?release
+MACRO chord_envelope, ?attack, ?sustain, ?decay, ?release
 	defb predefCommand1
 	defb $01, ?attack, ?sustain, ?decay, ?release
 ENDM
@@ -53,12 +53,13 @@ MACRO disable_glide
 	defb $02
 ENDM
 
-MACRO predef_03, ?arg_1
+MACRO glide_speed, ?speed
 	defb predefCommand2
-	defb $03, ?arg_1
+	defb $03, ?speed
 ENDM
 
-MACRO predef_04, ?is_attack, ?attack, ?decay ; set envelope?
+; to mute use parameters: 1, 0, 1
+MACRO melody_envelope, ?is_attack, ?attack, ?decay ; set envelope?
 	defb predefCommand2
 	defb $04, ?is_attack, ?attack, ?decay
 ENDM
