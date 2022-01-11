@@ -70,16 +70,16 @@ Music_Chords:
 	drum_speed 2
 	drumA
 	chord3 Ds4, B_3, Fs3, 32
-	chord3 B_4-1, B_3, 254, 4
+	chord3 B_4-1, B_3, B_2, 4
 	end_song
 
 Music_Bass:
 	enable_glide
-	note 226,12
-	note 240,12
-	note 216,12
-	note 226,12
-	note 202,128
+	note Cs3, 12
+	note C_3, 12
+	note D_3, 12
+	note Cs3, 12
+	note Ds3, 128
 	enable_glide
 	repeat 4
 		note Gs3, 16
@@ -89,7 +89,7 @@ Music_Bass:
 		note Gs3, 8
 	return
 	repeat 24
-		note 254, 16
+		note B_2, 16
 		note B_3, 16
 		note E_3, 4
 		note Fs3, 4
@@ -97,7 +97,7 @@ Music_Bass:
 		note Fs3, 4
 		note A_3, 4
 		note B_3, 4
-		note 254, 16
+		note B_2, 16
 		note B_3, 16
 		note B_3, 4
 		note A_3, 4
@@ -108,11 +108,11 @@ Music_Bass:
 		note A_3, 4
 		note B_3, 4
 		note Fs3, 4
-		note 226, 4
+		note Cs3, 4
 	return
 	repeat 24
-		note 254, 8
-		note 254, 8
+		note B_2, 8
+		note B_2, 8
 		note A_3, 4
 		note B_3, 8
 		note A_3, 4
@@ -121,13 +121,13 @@ Music_Bass:
 		note Fs3, 8
 		note E_3, 4
 		note Fs3, 4
-		note 226, 4
+		note Cs3, 4
 	return
 	note B_3, 24
 	note As3, 32
 	note A_3, 48
 	note Gs3, 128
-	note 254, 64
+	note B_2, 64
 	note B_3, 8
 	end_song
 
@@ -151,6 +151,7 @@ Music_Melody:
 	note B_3, 4
 	note F_4, 128
 
+; key seems to shift up here to compensate for echo?
 	echo_volume 3
 	enable_echo
 	note B_3, 24
@@ -163,6 +164,7 @@ Music_Melody:
 	note As3, 8
 	note Fs3, 8
 	note Gs3, 32
+
 	note B_3, 24
 	note As3, 4
 	note B_3, 20
@@ -178,9 +180,10 @@ Music_Melody:
 	enable_glide
 	note Fs4,40
 
+; normal key?
 	disable_glide
 	disable_echo
-	echo_volume 10 ; make echo more pronounced
+	echo_volume 10
 	repeat 2
 		note Fs4, 4
 		note E_4, 4
@@ -223,7 +226,7 @@ Music_Melody:
 	note E_4, 4
 	note Fs4, 80
 	repeat 2
-		note 254, 2
+		note B_2, 2
 		note E_3, 2
 		note Fs3, 2
 		note B_3, 2
@@ -236,7 +239,7 @@ Music_Melody:
 		note Fs3, 2
 		note E_3, 2
 	return
-	note 254, 2
+	note B_2, 2
 	note E_3, 2
 	note Fs3,38
 	melody_envelope 1,1,0
@@ -265,7 +268,7 @@ Music_Melody:
 		note Cs4, 2
 		note B_3, 2
 		note Fs3, 2
-		note 226, 2
+		note Cs3, 2
 	return
 	note Fs3, 64
 	glide_speed 2
@@ -469,7 +472,7 @@ Music_Melody:
 	note A_3, 48
 	note Gs3, 128
 
-	note 254, 64
+	note B_2, 64
 	disable_glide
 	defb B_3	; length doesn't matter at this point, song is cut off
 

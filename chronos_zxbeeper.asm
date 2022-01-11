@@ -1107,22 +1107,50 @@ Chord_RepeatPoint:
 	defb 0,255
 
 
-; drum pattern 1, called by FF 04
+; drum pattern 1
+; format: <length> <note>
 DrumPatternA:
-	defb 8,0,8,2
-	defb 4,3,2,0,4,3,2,0,2
-	defb 3,2,0,255,255
+	defb 8,0
+	defb 8,2
+	defb 4,3
+	defb 2,0
+	defb 4,3
+	defb 2,0
+	defb 2,3
+	defb 2,0
+	defb $ff, $ff
 
-; drum pattern 2, called by FF 05
+; drum pattern 2
+; format: <length> <note>
 DrumPatternB:
-	defb 8,0,8
-	defb 3,6,0,2,0,2,3,4
-	defb 0,2,4,8,0,4,3,4
-	defb 0,8,0,4,3,2,0,2
-	defb 0,8,0,8,3,6,0,2
-	defb 0,2,3,6,0,8,0,4
-	defb 3,4,0,8,0,2,1,2
-	defb 3,4,3,255,255
+	defb 8,0
+	defb 8,3
+	defb 6,0
+	defb 2,0
+	defb 2,3
+	defb 4,0
+	defb 2,4
+	defb 8,0
+	defb 4,3
+	defb 4,0
+	defb 8,0
+	defb 4,3
+	defb 2,0
+	defb 2,0
+	defb 8,0
+	defb 8,3
+	defb 6,0
+	defb 2,0
+	defb 2,3
+	defb 6,0
+	defb 8,0
+	defb 4,3
+	defb 4,0
+	defb 8,0
+	defb 2,1
+	defb 2,3
+	defb 4,3
+	defb $ff, $ff
 
 AY_Snare:
 	defb 7,55,11

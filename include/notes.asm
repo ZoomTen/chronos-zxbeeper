@@ -1,5 +1,10 @@
 ; rough note data equivalency
 
+B_2 EQU 254
+C_3 EQU 240
+Cs3 EQU 226
+D_3 EQU 216
+Ds3 EQU 202
 E_3 EQU 190
 F_3 EQU 181
 Fs3 EQU 170
