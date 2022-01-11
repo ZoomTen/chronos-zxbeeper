@@ -25,33 +25,23 @@ INCLUDE "songs/chronos_title.asm"
 ; music init
 Music_Init:
 	DI                      ; Disable interrupts, since perfect timing is needed
-	LD HL,L63263
-Music_Init_0:
-	LD BC,65533             ; + Select AY registers
-	LD A,(HL)
-	INC HL
 
 IF ENABLE_AY
-	OUT (C),A               ; + Execute AY part
-ELSE
-	NOP
-	NOP
+	ld hl, AY_Snare
+feature_ay_loop:
+	ld bc, $fffd             ; + Select AY registers
+	ld a, (hl)
+	inc hl
+	out (c), a               ; + Execute AY part
+	ld bc, $bffd             ; + Write to AY registers
+	ld a, (hl)
+	inc hl
+	out (c), a               ; + Execute AY part
+	ld a,(hl)
+	and a
+	jp nz, feature_ay_loop
 ENDIF
 
-	LD BC,49149             ; + Write to AY registers
-	LD A,(HL)
-	INC HL
-
-IF ENABLE_AY
-	OUT (C),A               ; + Execute AY part
-ELSE
-	NOP
-	NOP
-ENDIF
-
-	LD A,(HL)
-	AND A
-	JP NZ,Music_Init_0
 	LD IX,Music_Chords       ; IX = chords
 	LD (Chord_RepeatPoint),IX
 	LD IY,Music_Bass        ; IY = bass
