@@ -93,15 +93,21 @@ ENDM
 
 MACRO note, ?note, ?length
 	defb ?note
-	defb ?length
+	defb ?length * _SPEED
 ENDM
 
 MACRO chord2, ?note1, ?note2, ?length ; two notes pressed
 	defb ?note1, ?note2
-	defb ?length
+	defb ?length * _SPEED
 ENDM
 
 MACRO chord3, ?note1, ?note2, ?note3, ?length ; two notes pressed
 	defb ?note1, ?note2, ?note3
-	defb ?length
+	defb ?length * _SPEED
+ENDM
+
+MACRO song_speed, ?speed ; compile-time parameter
+; higher speed parameter = slower song
+; this is usually the length of a 16th note
+	_SPEED defl ?speed
 ENDM
