@@ -1109,6 +1109,12 @@ Chord_RepeatPoint:
 
 ; drum pattern 1
 ; format: <length> <note>
+; 0 = kick
+; 1 = stick
+; 2 = kick2?
+; 3 = SNARE
+; 4 = hihat
+; 5 = pedal hat?
 DrumPatternA:
 	defb 8,0
 	defb 8,2
